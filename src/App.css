@@ -1,38 +1,47 @@
-.App {
-  text-align: center;
+.car {
+  width: 300px;
+  height: 550px;
+  position: relative;
 }
 
-.App-logo {
-  height: 40vmin;
-  pointer-events: none;
+.car__body {
+  display: inline-block;
+  background-color: #b2ebf2;
+  width: 300px;
+  height: 550px;
 }
 
-@media (prefers-reduced-motion: no-preference) {
-  .App-logo {
-    animation: App-logo-spin infinite 20s linear;
-  }
+.car__shield {
+  background-color: #00acc1;
+  width: 250px;
+  height: 100px;
+  margin: 50px auto 0;
 }
 
-.App-header {
-  background-color: #282c34;
-  min-height: 100vh;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  font-size: calc(10px + 2vmin);
-  color: white;
+.car__front-left-wheel, .car__front-right-wheel, .car__back-left-wheel, .car__back-right-wheel {
+  position: absolute;
+  width: 20px;
+  height: 100px;
+  background-color: #b2ebf2;
+  border: 3px solid #26c6da;
 }
 
-.App-link {
-  color: #61dafb;
+.car__front-left-wheel {
+  top: 60px;
+  left: -10px;
 }
 
-@keyframes App-logo-spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
+.car__front-right-wheel {
+  top: 60px;
+  right: -10px;
+}
+
+.car__back-left-wheel {
+  bottom: 60px;
+  left: -10px;
+}
+
+.car__back-right-wheel {
+  bottom: 60px;
+  right: -10px;
 }
