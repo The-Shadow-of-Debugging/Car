@@ -18,30 +18,25 @@
   margin: 50px auto 0;
 }
 
-.car__front-left-wheel, .car__front-right-wheel, .car__back-left-wheel, .car__back-right-wheel {
+.car__wheel {
   position: absolute;
   width: 20px;
   height: 100px;
   background-color: #b2ebf2;
   border: 3px solid #26c6da;
 }
-
-.car__front-left-wheel {
+.car__wheel_front {
   top: 60px;
+}
+
+.car__wheel_back {
+  bottom: 60px;
+}
+
+.car_wheel_left {
   left: -10px;
 }
 
-.car__front-right-wheel {
-  top: 60px;
-  right: -10px;
-}
-
-.car__back-left-wheel {
-  bottom: 60px;
-  left: -10px;
-}
-
-.car__back-right-wheel {
-  bottom: 60px;
+.car_wheel_right {
   right: -10px;
 }
