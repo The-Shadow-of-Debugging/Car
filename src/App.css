@@ -2,6 +2,7 @@
   width: 300px;
   height: 550px;
   position: relative;
+  transition: transform .3s linear;
 }
 
 .car__body {

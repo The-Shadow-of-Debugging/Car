@@ -3,95 +3,119 @@ import {useEffect} from 'react'
 
 function App() {
   useEffect(() => {
+
+    const carCanvas = document.getElementById('car');
+    const currentPosition = {
+      x: 500,
+      y: -200,
+    }
+
     class Car {
+      constructor() {
+        this.x = currentPosition.x;
+        this.y = currentPosition.y;
+        this.xVelocity = 5;
+        this.yVelocity = 5;
+        this.currentDirection = 0;
+      }
 
+      directTop() {
+        const carDirection = Math.abs(this.currentDirection) % 360;
+
+        const directions = {
+          90: () => this.currentDirection ? this.x += this.xVelocity : this.x -= this.xVelocity,
+          180: () => this.y -= this.yVelocity,
+          270: () => this.currentDirection ? this.x -= this.xVelocity : this.x += this.xVelocity,
+          0: () => this.y += this.yVelocity,
+        }
+
+        directions[carDirection]()
+      }
+
+      directBottom() {
+        const carDirection = Math.abs(this.currentDirection) % 360;
+        const directions = {
+          90: () => this.currentDirection ? this.x -= this.xVelocity : this.x += this.xVelocity,
+          180: () => this.y += this.yVelocity,
+          270: () => this.currentDirection ? this.x += this.xVelocity : this.x -= this.xVelocity,
+          0: () => this.y -= this.yVelocity,
+        }
+
+        directions[carDirection]()
+      }
+
+      move(direction) {
+        if(!direction) return;
+
+        const directionHandler = {
+          'Up': () => {this.directTop()},
+          'Down': () => {this.directBottom()},
+          'Left': () => this.changeDirection(direction),
+          'Right': () => this.changeDirection(direction),
+        }
+
+        directionHandler[direction]();
+      }
+
+      changeDirection(direction) {
+        const directionHandler = {
+          'Left': () => {this.currentDirection -=90; carCanvas.style.transform = 'rotate(' + this.currentDirection + 'deg)'; },
+          'Right': () => {this.currentDirection +=90; carCanvas.style.transform = 'rotate(' + this.currentDirection +'deg)'; },
+        }
+        directionHandler[direction]()
+      }
+
+      draw() {
+        carCanvas.style.setProperty('bottom', this.y + 'px');
+        carCanvas.style.setProperty('left', this.x + 'px');
+      }
     }
 
-    class Controller {
+    const carObject = new Car();
+    let direction = '';
 
-    }
-    const car = document.getElementById('car')
-    const speed = 10
-    let previousStep = ''
-    let acceleration = 1
-    const coords = {
-      x: 0,
-      y: 0
-    }
-
-    function checkAngle(rotateDirection) {
+    document.addEventListener('keydown', ({code}) => {
       const directionHandler = {
-        'U': () => car.style.transform = 'rotate(0deg)',
-        'D': () => car.style.transform = 'rotate(180deg)',
-        'L': () => car.style.transform = 'rotate(270deg)',
-        'R': () => car.style.transform = 'rotate(90deg)',
+        ArrowUp: 'Up',
+        ArrowDown: 'Down',
+        ArrowLeft: 'Left',
+        ArrowRight: 'Right',
       }
 
-      directionHandler[rotateDirection]();
+      direction = directionHandler[code];
+    })
+
+    document.addEventListener('keyup', ({code}) => {
+      if(direction !== 'Up' || direction !== 'Down') {
+        direction = '';
+      }
+    })
+
+    let rotationCount = 0;
+
+    const loop = () => {
+
+      if (!rotationCount) {
+        carObject.move(direction);
+        carObject.draw();
+        rotationCount++;
+      }
+
+      if(direction === 'Up' || direction === 'Down') {
+        carObject.move(direction);
+        carObject.draw();
+        rotationCount = 0;
+      }
+
+      requestAnimationFrame(loop);
     }
 
-    function checkPreviousStep(currentStep) {
-      if (previousStep === currentStep) {
-        acceleration += 1
-      } else {
-        acceleration = 1
-      }
-    }
+    loop();
 
     //todo: rework and union move methods
     //todo: to limit car position by window bounds
-    // todo: движение машины по стрелкам с адекватным углом поворота
-    // todo: вынести в классы
 
-    function moveUp() {
-      checkAngle('U')
-      checkPreviousStep('U')
-      car.style.setProperty('top', coords.y - speed * acceleration + 'px')
-      coords.y -= speed * acceleration
-      previousStep = 'U'
-    }
-
-    function moveDown() {
-      checkAngle('D')
-      checkPreviousStep('D')
-      car.style.setProperty('top', coords.y + speed * acceleration + 'px')
-      coords.y += speed * acceleration
-      previousStep = 'D'
-    }
-
-    function moveLeft() {
-      checkAngle('L')
-      checkPreviousStep('L')
-      car.style.setProperty('left', coords.x - speed * acceleration + 'px')
-      coords.x -= speed * acceleration
-      previousStep = 'L'
-    }
-
-    function moveRight() {
-      checkAngle('R')
-      checkPreviousStep('R')
-      car.style.setProperty('left', coords.x + speed * acceleration + 'px')
-      coords.x += speed * acceleration
-      previousStep = 'R'
-    }
-
-    function checkPressAndExecute(key) {
-
-      const objectHandler = {
-        'ArrowLeft': moveLeft,
-        'ArrowRight': moveRight,
-        'ArrowUp': moveUp,
-        'ArrowDown': moveDown,
-      }
-
-      objectHandler[key]()
-    }
-
-    document.addEventListener('keydown', (e) => {
-      checkPressAndExecute(e.key)
-    })
-
-  }, [])
+  }, []);
 
   return (
     <div className="car" id="car">
